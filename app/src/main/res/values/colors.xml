@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFC77E</color>
+    <color name="colorPrimaryDark">#FFC270</color>
+    <color name="colorAccent">#FFA43C</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="red">#FF0000</color>
+    <color name="color_gray">#757575</color>
+    <color name="background_toolbar">#FCFBFC</color>
+    <color name="background_toolbar_decorator">#E9E8E9</color>
+    <color name="color_bottom_navigation">#EF8A01</color>
+    <color name="background_item_lesson_downloaded">#FDF3E3</color>
+    <color name="color_background_login">#FFDF8F</color>
+    <color name="color_background_create_a_new_account">#1AFFAA1C</color>
+    <color name="color_create_a_new_account">#C4841B</color>
+    <color name="color_text_input">#F9B144</color>
+    <color name="color_alabaster">#f9f9f9</color>
+    <color name="color_yellow_orange">#FFA939</color>
+    <color name="color_boulder">#767676</color>
+    <color name="color_alto">#D5D5D5</color>
+    <color name="color_sentence_me_shadow">#F7EFDB</color>
+    <color name="color_sentence_me_background">#FFF7E3</color>
+    <color name="color_sentence_boss_shadow">#EEEEEE</color>
+    <color name="color_sentence_boss_background">#F6F6F6</color>
+    <color name="color_early_dawn">#FFF7E3</color>
+    <color name="color_geraldine">#FF7D7F</color>
+    <color name="color_text_time_video">#FFBEBEBE</color>
+    <color name="color_button_play_pause">#64000000</color>
+</resources>
