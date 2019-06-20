@@ -37,12 +37,14 @@
     <FrameLayout
         android:id="@+id/main_media_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_marginStart="@dimen/dp_24"
         android:layout_marginTop="@dimen/dp_36"
         android:layout_marginEnd="@dimen/dp_24"
+        android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conversation_des">
@@ -51,13 +53,14 @@
             android:id="@+id/exo_player"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="gone" />
+            android:background="@android:color/transparent"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/img_preview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center" />
+            android:layout_gravity="center_horizontal" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,11 +4,10 @@ import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
@@ -27,7 +26,7 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 
-class Activity : AppCompatActivity() {
+class VideoFragment : Fragment() {
     private val STATE_RESUME_WINDOW = "resumeWindow"
     private val STATE_RESUME_POSITION = "resumePosition"
     private val STATE_PLAYER_FULLSCREEN = "playerFullscreen"
@@ -46,11 +45,18 @@ class Activity : AppCompatActivity() {
     private var mResumeWindow: Int = 0
     private var mResumePosition: Long = 0
 
+    companion object{
+        fun newInstance(): VideoFragment {
+            return VideoFragment()
+        }
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.activity_main,container,false)
+    }
 
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         if (savedInstanceState != null) {
             mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW)
@@ -62,8 +68,23 @@ class Activity : AppCompatActivity() {
         setVideoPreview()
     }
 
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_main)
+//
+//        if (savedInstanceState != null) {
+//            mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW)
+//            mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION)
+//            mExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN)
+//            isPlay = savedInstanceState.getBoolean(STATE_CHECK_PLAY)
+//        }
+//
+//        setVideoPreview()
+//    }
 
-    public override fun onSaveInstanceState(outState: Bundle) {
+
+    override fun onSaveInstanceState(outState: Bundle) {
 
         outState.putInt(STATE_RESUME_WINDOW, mResumeWindow)
         outState.putLong(STATE_RESUME_POSITION, mResumePosition)
@@ -73,17 +94,16 @@ class Activity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onResume() {
-        super.onResume()
-
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         if (mExoPlayerView == null) {
 
-            mExoPlayerView = findViewById(R.id.exo_player) as SimpleExoPlayerView
+            mExoPlayerView = activity?.findViewById(R.id.exo_player) as SimpleExoPlayerView
 
             initFullscreenDialog()
             initFullscreenButton()
 
-            val userAgent = Util.getUserAgent(this@Activity, applicationContext.applicationInfo.packageName)
+            val userAgent = Util.getUserAgent(context, "Exo2")
             val httpDataSourceFactory = DefaultHttpDataSourceFactory(
                 userAgent,
                 null,
@@ -91,7 +111,7 @@ class Activity : AppCompatActivity() {
                 DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
                 true
             )
-            val dataSourceFactory = DefaultDataSourceFactory(this@Activity, null, httpDataSourceFactory)
+            val dataSourceFactory = DefaultDataSourceFactory(context, null, httpDataSourceFactory)
 
             mVideoSource = HlsMediaSource(Uri.parse(video), dataSourceFactory, 1, null, null)
         }
@@ -108,9 +128,44 @@ class Activity : AppCompatActivity() {
         }
     }
 
+//    override fun onResume() {
+//        super.onResume()
+//
+//        if (mExoPlayerView == null) {
+//
+//            mExoPlayerView = activity?.findViewById(R.id.exo_player) as SimpleExoPlayerView
+//
+//            initFullscreenDialog()
+//            initFullscreenButton()
+//
+//            val userAgent = Util.getUserAgent(context, "Exo2")
+//            val httpDataSourceFactory = DefaultHttpDataSourceFactory(
+//                userAgent,
+//                null,
+//                DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+//                DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
+//                true
+//            )
+//            val dataSourceFactory = DefaultDataSourceFactory(context, null, httpDataSourceFactory)
+//
+//            mVideoSource = HlsMediaSource(Uri.parse(video), dataSourceFactory, 1, null, null)
+//        }
+//
+//        initExoPlayer()
+//
+//        if (mExoPlayerFullscreen) {
+//            (exo_player.parent as ViewGroup).removeView(exo_player)
+//            mFullScreenDialog.addContentView(
+//                exo_player,
+//                ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+//            )
+//            mFullScreenDialog.show()
+//        }
+//    }
+
     private fun initFullscreenDialog() {
 
-        mFullScreenDialog = object : Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+        mFullScreenDialog = object : Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
             override fun onBackPressed() {
                 if (mExoPlayerFullscreen)
                     closeFullscreenDialog()
@@ -131,7 +186,7 @@ class Activity : AppCompatActivity() {
 
     private fun openFullscreenDialog() {
 
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         (exo_player.parent as ViewGroup).removeView(exo_player)
         mFullScreenDialog.addContentView(
@@ -146,7 +201,7 @@ class Activity : AppCompatActivity() {
 
     private fun closeFullscreenDialog() {
 
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         (mExoPlayerView!!.parent as ViewGroup).removeView(mExoPlayerView)
         main_media_frame.addView(mExoPlayerView)
@@ -160,7 +215,7 @@ class Activity : AppCompatActivity() {
         val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(DefaultBandwidthMeter())
         val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
         val player =
-            ExoPlayerFactory.newSimpleInstance(DefaultRenderersFactory(this), trackSelector, DefaultLoadControl())
+            ExoPlayerFactory.newSimpleInstance(DefaultRenderersFactory(context), trackSelector, DefaultLoadControl())
         exo_player.player = player
 
         if (mResumeWindow != C.INDEX_UNSET) {
@@ -181,7 +236,7 @@ class Activity : AppCompatActivity() {
         }
 
 
-        if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        if (activity?.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             exo_fullscreen_icon.setImageDrawable(resources.getDrawable(R.drawable.ic_fullscreen_skrink))
         }
 
